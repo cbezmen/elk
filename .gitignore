@@ -1,0 +1,9 @@
+.gradle
+.settings
+.project
+.classpath
+gradle**
+build
+bin
+logs
+es-data

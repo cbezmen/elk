@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: sample-app
+    
+logging:
+  file: logs/console-${spring.application.name}.log
+  
+
+---
+spring:
+  profiles: docker
+  main:
+    banner-mode: log
+  

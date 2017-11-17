@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: sample-app
+      dockerfile: docker/Dockerfile
+    restart: always 
+    environment:
+    - PROFILE=docker
+    links:
+    - logstash
+  
+
+  elasticsearch:
+    build: 
+      context: elk/elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+    volumes:
+      - ./elk/es-data:/usr/share/elasticsearch/data
+      
+  logstash:
+    build: 
+      context: elk/logstash
+    command: -f /etc/logstash/conf.d/
+    volumes:
+      - ./elk/logstash/config:/etc/logstash/conf.d
+    ports:
+      - "9999:9999"
+    links:
+      - elasticsearch
+
+  kibana:
+    build: 
+     context: elk/kibana
+    volumes:
+      - ./elk/kibana/config/:/opt/kibana/config/
+    ports:
+      - "5601:5601"
+    links:
+      - elasticsearch
