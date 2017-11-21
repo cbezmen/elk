@@ -111,6 +111,7 @@ This command stop all `services` and `deployments` created.
 * [Project Lombok](https://projectlombok.org/)
 
 ### Cli Versions
+
 | Cli               | Version             | 
 | :---------------: | :-----------------: | 
 | docker            | 17.11.0-ce-rc4      |   
@@ -118,3 +119,5 @@ This command stop all `services` and `deployments` created.
 | minikube          | v0.23.0             |  
 | gradle            | 3.2.1               |   
 
+
+![Deadline gif](images/giphy.gif)
