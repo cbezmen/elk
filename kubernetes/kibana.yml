@@ -21,7 +21,7 @@ spec:
       volumes:
       - name: kibana-volume
         hostPath:
-          path: "/Users/cbezmen/Documents/Projects/elk/kibana/config"
+          path: "/Users/cbezmen/Documents/Projects/elk/elk/kibana/config"
 
 ---
 apiVersion: v1

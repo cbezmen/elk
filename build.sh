@@ -39,6 +39,8 @@ if [[ $@ == *"stop-k8"* ]]; then
   note "Stoping kubernetes..."
   kubectl delete service --all
   kubectl delete deployment --all
+  kubectl delete pvc --all
+  kubectl delete pv --all
 fi
 
 if [[ $@ == *"start-k8"* ]]; then
