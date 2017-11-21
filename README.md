@@ -4,13 +4,16 @@
     - [Docker](#docker)
         - [Description](#description)
         - [Start Docker Compose](#start-docker-compose)
+        - [Watch Docker Containers](#watch-docker-containers)
         - [Stop Docker Compose](#stop-docker-compose)
     - [Kubernetes](#kubernetes)
         - [Description](#description)
         - [Build Projects](#build-projects)
         - [Start Kubernetes](#start-kubernetes)
+        - [Watch Kubernetes Environment](#watch-kubernetes-environment)
         - [Stop Kubernetes](#stop-kubernetes)
-        - [Knowledge & Requirements](#knowledge-requirements)
+    - [Knowledge & Requirements](#knowledge-requirements)
+        - [Cli Versions](#cli-versions)
 
 ## Docker
 
@@ -26,6 +29,13 @@ $ ./build.sh start-d9
 This command start `docker-compose.yaml` file. This will run sample-app and elk projects.
 
 You can check Kibana UI from http://localhost:5601/app/kibana
+
+### Watch Docker Containers 
+
+```
+$ watch docker ps
+```
+With this command, you can easily watch all containers created.
 
 ### Stop Docker Compose
 
@@ -56,6 +66,10 @@ $ ./build.sh build-k8
 ```
 This command build and dockerized all projects under minikube environment.
 
+> **Warning**:  There is no support for relative path in kubernetes. Please change `hostPath` field in `logstash.yml` and `kibana.yml` !!!
+
+
+
 ### Start Kubernetes
 
 ```
@@ -67,6 +81,13 @@ You can check Kibana UI from
 ```
 $ minikube service kibana
 ``` 
+
+### Watch Kubernetes Environment 
+
+```
+$ watch kubectl get deployment,svc,pods,pvc,pv
+```
+With this command, you can easily watch all deployments, service, pods, persistent volume and claim.
  
 ### Stop Kubernetes
 
@@ -75,7 +96,7 @@ $ ./build.sh stop-k8
 ```
 This command stop all `services` and `deployments` created.
 
-### Knowledge & Requirements
+## Knowledge & Requirements
 
 * [Spring](https://spring.io/)
   * [Spring Boot](https://projects.spring.io/spring-boot/)
@@ -88,4 +109,12 @@ This command stop all `services` and `deployments` created.
 * [Kubernetes](https://kubernetes.io/)  
   * [Minikube](https://kubernetes.io/docs/tutorials/stateless-application/hello-minikube/)
 * [Project Lombok](https://projectlombok.org/)
+
+### Cli Versions
+| Cli               | Version             | 
+| :---------------: | :-----------------: | 
+| docker            | 17.11.0-ce-rc4      |   
+| docker-compose    | 1.17.1              | 
+| minikube          | v0.23.0             |  
+| gradle            | 3.2.1               |   
 
