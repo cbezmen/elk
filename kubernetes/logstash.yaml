@@ -1,0 +1,43 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: logstash
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: logstash
+    spec:
+      containers:
+      - name: logstash
+        image: logstash:v1
+        ports:
+        - containerPort: 9999
+        args:
+        - -f
+        - /etc/logstash/conf.d/
+        volumeMounts:
+        - mountPath: /etc/logstash/conf.d
+          name: logstash-volume
+      restartPolicy: Always
+      volumes:
+      - name: logstash-volume
+        hostPath:
+          path: "/Users/cbezmen/Documents/Projects/elk/elk/logstash/config"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: logstash
+  labels:
+    app: logstash
+spec:
+  type: NodePort
+  ports:
+  - name: "9999"
+    port: 9999
+    targetPort: 9999
+  selector:
+    app: logstash
