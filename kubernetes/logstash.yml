@@ -1,43 +1,43 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
-metadata:
-  name: logstash
-spec:
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: logstash
-    spec:
-      containers:
-      - name: logstash
-        image: logstash:v1
-        ports:
-        - containerPort: 9999
-        args:
-        - -f
-        - /etc/logstash/conf.d/
-        volumeMounts:
-        - mountPath: /etc/logstash/conf.d
-          name: logstash-volume
-      restartPolicy: Always
-      volumes:
-      - name: logstash-volume
-        hostPath:
-          path: "/Users/cbezmen/Documents/Projects/elk/elk/logstash/config"
-
----
-apiVersion: v1
-kind: Service
 metadata:
   name: logstash
   labels:
     app: logstash
 spec:
-  type: NodePort
-  ports:
-  - name: "9999"
-    port: 9999
-    targetPort: 9999
+  replicas: 1
+  template:
+    metadata:
+      name: logstash
+      labels:
+        app: logstash
+    spec:
+      containers:
+        - name: logstash
+          image: logstash:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5044
+          volumeMounts:
+            - mountPath: /usr/share/logstash/pipeline/logstash.conf
+              name: logstash-volume
+      restartPolicy: Always
+      volumes:
+        - name: logstash-volume
+          hostPath:
+            path: "/Users/cbezmen/Documents/projects/elk/elk/logstash/config/logstash.conf"
+  selector:
+    matchLabels:
+      app: logstash
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: logstash
+spec:
   selector:
     app: logstash
+  type: LoadBalancer
+  ports:
+    - port: 5044
+      targetPort: 5044

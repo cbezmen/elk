@@ -5,40 +5,41 @@ services:
     build:
       context: sample-app
       dockerfile: docker/Dockerfile
-    restart: always 
+    restart: always
     environment:
-    - PROFILE=docker
+      - PROFILE=docker
     links:
-    - logstash
-  
+      - logstash
 
   elasticsearch:
-    build: 
+    build:
       context: elk/elasticsearch
     ports:
       - "9200:9200"
       - "9300:9300"
     environment:
-      ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx1g"
     volumes:
       - ./elk/es-data:/usr/share/elasticsearch/data
-      
+
   logstash:
-    build: 
+    build:
       context: elk/logstash
-    command: -f /etc/logstash/conf.d/
+      #    command: -f /etc/logstash/conf.d/
     volumes:
-      - ./elk/logstash/config:/etc/logstash/conf.d
+      - ./elk/logstash/config/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     ports:
-      - "9999:9999"
+      - "5044:5044"
     links:
       - elasticsearch
 
   kibana:
-    build: 
-     context: elk/kibana
+    build:
+      context: elk/kibana
     volumes:
-      - ./elk/kibana/config/:/opt/kibana/config/
+      #      - ./elk/kibana/config/:/opt/kibana/config/
+      - ./elk/kibana/config/kibana-old.yml:/usr/share/kibana/config/kibana-old.yml
     ports:
       - "5601:5601"
     links:

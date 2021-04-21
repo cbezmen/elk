@@ -7,3 +7,6 @@ build
 bin
 logs
 es-data
+target
+.idea
+*.iml

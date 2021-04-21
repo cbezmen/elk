@@ -1,32 +1,41 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: elasticsearch
+  labels:
+    app: elasticsearch
 spec:
   replicas: 1
   template:
     metadata:
+      name: elasticsearch
       labels:
         app: elasticsearch
     spec:
       containers:
-      - name: elasticsearch
-        image: elasticsearch:v1
-        env:
-        - name: ES_JAVA_OPTS
-          value: -Xms1g -Xmx1g
-        ports:
-        - containerPort: 9200
-        - containerPort: 9300
-        volumeMounts:
-        - mountPath: /usr/share/elasticsearch/data
-          name: elasticsearch-volume
+        - name: elasticsearch
+          image: elasticsearch:v1
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: discovery.type
+              value: single-node
+            - name: ES_JAVA_OPTS
+              value: -Xms512m -Xmx1g
+          ports:
+            - containerPort: 9200
+            - containerPort: 9300
+          volumeMounts:
+            - mountPath: /usr/share/elasticsearch/data
+              name: elasticsearch-volume
       restartPolicy: Always
       volumes:
-      - name: elasticsearch-volume
-        hostPath:
-          # path: "/Users/cbezmen/Documents/Projects/elk/elk/es-data"
-          path: "/data"
+        - name: elasticsearch-volume
+          hostPath:
+            path: "/Users/cbezmen/Documents/Projects/elk/elk/es-data"
+
+  selector:
+    matchLabels:
+      app: elasticsearch
 ---
 apiVersion: v1
 kind: Service
@@ -35,12 +44,11 @@ metadata:
   labels:
     app: elasticsearch
 spec:
-  ports:
-  - name: "9200"
-    port: 9200
-    targetPort: 9200
-  - name: "9300"
-    port: 9300
-    targetPort: 9300
   selector:
     app: elasticsearch
+  type: LoadBalancer
+  ports:
+    - port: 9200
+      targetPort: 9200
+      protocol: TCP
+      name: port-9200

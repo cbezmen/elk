@@ -1,47 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-	<statusListener class="ch.qos.logback.core.status.NopStatusListener" />
-	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
-	<springProperty scope="context" name="app-name" source="spring.application.name"/>
-	<springProperty scope="context" name="logfilepath" source="logging.file:logs/console-${app-name}.log"/>
-	<property name="CONSOLE_LOG_PATTERN" value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
-	<appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
-		<encoder>
-			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
-		</encoder>
-	</appender>
-	<appender name="dailyRollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>logs/console-${app-name}.log</file>
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<!-- daily rollover -->
-			<fileNamePattern>logs/console-${app-name}.%d{yyyy-MM-dd}.log</fileNamePattern>
-			<!-- keep 30 days' worth of history -->
-			<maxHistory>365</maxHistory>
-		</rollingPolicy>
-		<encoder>
-			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
-		</encoder>
-	</appender>
-	<appender name="logstashTCPSocket" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-		<destination>logstash:9999</destination>
-		<encoder class="net.logstash.logback.encoder.LogstashEncoder">
-			<includeMdcKeyName>${HOSTNAME}</includeMdcKeyName>
-		</encoder>
-	</appender>
-	<appender name="jsonConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
-		<encoder class="net.logstash.logback.encoder.LogstashEncoder" />
-	</appender>
-	<springProfile name="default">
-		<root level="INFO">
-			<appender-ref ref="consoleAppender" />
-			<appender-ref ref="dailyRollingFile" />
-		</root>
-	</springProfile>
-	<springProfile name="docker">
-		<root level="INFO">
-			<appender-ref ref="jsonConsoleAppender" />
-			<appender-ref ref="dailyRollingFile" />
-			<appender-ref ref="logstashTCPSocket" />
-		</root>
-	</springProfile>
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <springProperty scope="context" name="app-name" source="spring.application.name"/>
+    <springProperty scope="context" name="logfilepath" source="logging.file:logs/console-${app-name}.log"/>
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+    <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+    <appender name="dailyRollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/console-${app-name}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>logs/console-${app-name}.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>365</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+    <appender name="logstashTCPSocket" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>logstash:5044</destination>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <includeMdcKeyName>${HOSTNAME}</includeMdcKeyName>
+        </encoder>
+    </appender>
+    <appender name="jsonConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    </appender>
+    <springProfile name="default">
+        <root level="INFO">
+            <appender-ref ref="consoleAppender"/>
+            <appender-ref ref="dailyRollingFile"/>
+        </root>
+    </springProfile>
+    <springProfile name="docker">
+        <root level="INFO">
+            <appender-ref ref="jsonConsoleAppender"/>
+            <appender-ref ref="dailyRollingFile"/>
+            <appender-ref ref="logstashTCPSocket"/>
+        </root>
+    </springProfile>
 </configuration>

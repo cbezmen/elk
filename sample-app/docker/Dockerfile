@@ -4,6 +4,6 @@ LABEL maintainer="Can Bezmen <canbezmen@gmail.com>"
 
 ENV PROFILE=docker
 
-ADD ./build/libs/*.jar app.jar
+ADD ./target/*.jar app.jar
 
 CMD ["java", "-jar", "-Dspring.profiles.active=${PROFILE}", "-Xmx128m", "-Duser.timezone=UTC", "app.jar"]

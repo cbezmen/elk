@@ -1,40 +1,43 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
-metadata:
-  name: kibana
-spec:
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: kibana
-    spec:
-      containers:
-      - name: kibana
-        image: kibana:v1
-        ports:
-        - containerPort: 5601
-        volumeMounts:
-        - mountPath: /opt/kibana/config/
-          name: kibana-volume
-      restartPolicy: Always
-      volumes:
-      - name: kibana-volume
-        hostPath:
-          path: "/Users/cbezmen/Documents/Projects/elk/elk/kibana/config"
-
----
-apiVersion: v1
-kind: Service
 metadata:
   name: kibana
   labels:
     app: kibana
 spec:
-  type: NodePort
-  ports:
-  - name: "5601"
-    port: 5601
-    targetPort: 5601
+  replicas: 1
+  template:
+    metadata:
+      name: kibana
+      labels:
+        app: kibana
+    spec:
+      containers:
+        - name: kibana
+          image: kibana:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5601
+          volumeMounts:
+            - mountPath: /usr/share/kibana/config/kibana.yml
+              name: kibana-volume
+      restartPolicy: Always
+      volumes:
+        - name: kibana-volume
+          hostPath:
+            path: "/Users/cbezmen/Documents/Projects/elk/elk/kibana/config/kibana.yml"
+  selector:
+    matchLabels:
+      app: kibana
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana
+spec:
   selector:
     app: kibana
+  type: LoadBalancer
+  ports:
+    - port: 5601
+      targetPort: 5601
