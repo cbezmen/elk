@@ -1,4 +1,4 @@
-FROM anapsix/alpine-java:8_server-jre_unlimited
+FROM adoptopenjdk/openjdk11:alpine-jre
 
 LABEL maintainer="Can Bezmen <canbezmen@gmail.com>"
 

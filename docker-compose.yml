@@ -26,7 +26,6 @@ services:
   logstash:
     build:
       context: elk/logstash
-      #    command: -f /etc/logstash/conf.d/
     volumes:
       - ./elk/logstash/config/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     ports:
@@ -38,8 +37,7 @@ services:
     build:
       context: elk/kibana
     volumes:
-      #      - ./elk/kibana/config/:/opt/kibana/config/
-      - ./elk/kibana/config/kibana-old.yml:/usr/share/kibana/config/kibana-old.yml
+      - ./elk/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
     ports:
       - "5601:5601"
     links:
